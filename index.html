@@ -748,6 +748,10 @@ document.addEventListener('fullscreenchange', ()=>{ drawFullIcon(); setTimeout(l
 })();
 
 /* ---------- Khởi động ---------- */
+// Đăng ký service worker để chơi offline (chỉ chạy khi host qua https, vd GitHub Pages)
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
 drawSoundIcon(); drawFullIcon();
 window.addEventListener('resize', layout);
 buildLevel();
