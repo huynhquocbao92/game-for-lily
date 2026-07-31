@@ -27,10 +27,10 @@ body {
 .star { position:absolute; border-radius:50%; background:#fff; animation:tw 3s ease-in-out infinite; }
 @keyframes tw { 0%,100%{opacity:.15; transform:scale(.7)} 50%{opacity:.9; transform:scale(1.15)} }
 
-#app { position:relative; z-index:1; width:100%; height:100dvh; display:flex; flex-direction:column; align-items:center; }
+#app { position:relative; z-index:3; width:100%; height:100dvh; display:flex; flex-direction:column; align-items:center; }
 
 /* ---------- HUD ---------- */
-#hud { width:min(100%,720px); display:flex; align-items:center; gap:8px; padding:10px 12px 6px; }
+#hud { width:min(100%,720px); display:flex; align-items:center; gap:8px; padding:7px 10px 4px; }
 .pill {
   color:#fff; font-weight:800; font-size:16px; white-space:nowrap;
   background:linear-gradient(180deg,#a052d8,#7a35b8);
@@ -168,8 +168,8 @@ body {
   border:2px solid rgba(240,160,220,.75); border-radius:12px; padding:8px 16px; opacity:0; transition:opacity .25s; }
 
 /* ---------- Controls ---------- */
-#controls { display:flex; gap:12px; align-items:center; justify-content:center; padding:8px 10px; width:min(100%,720px); }
-#controls .pill { font-size:17px; padding:8px 20px; cursor:pointer; }
+#controls { display:flex; gap:8px; align-items:center; justify-content:center; padding:4px 8px; width:min(100%,720px); }
+#controls .pill { font-size:14px; padding:5px 14px; cursor:pointer; }
 button.pill:active { transform:scale(.94); }
 button.pill:disabled { filter:grayscale(.8) brightness(.7); cursor:default; }
 #score-box { background:linear-gradient(180deg,#4a2580,#331a5c); }
@@ -181,9 +181,9 @@ button.pill:disabled { filter:grayscale(.8) brightness(.7); cursor:default; }
 #wave .w1 { animation:drift 9s linear infinite; opacity:.95; }
 #wave .w2 { animation:drift 14s linear infinite reverse; opacity:.6; }
 @keyframes drift { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-#slogan { position:fixed; left:0; right:0; bottom:5px; z-index:2; text-align:center; pointer-events:none;
-  color:#fff; font-weight:900; font-size:clamp(20px,4.6vh,36px); letter-spacing:1px;
-  -webkit-text-stroke:1.5px #6a35a8; paint-order:stroke fill;
+#slogan { position:fixed; left:0; right:0; bottom:3px; z-index:2; text-align:center; pointer-events:none;
+  color:#fff; font-weight:900; font-size:clamp(13px,2.8vh,24px); letter-spacing:.5px;
+  -webkit-text-stroke:1px #6a35a8; paint-order:stroke fill;
   text-shadow:0 4px 0 rgba(80,40,130,.7), 0 6px 14px rgba(0,0,0,.35); }
 
 /* ---------- Overlay ---------- */
@@ -639,7 +639,7 @@ const spriteSVG = t => `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="58.5" rx="
 let COLS = 8, ROWS = 10;                      // lưới thật (không tính viền rỗng), tự xoay theo màn hình
 function chooseOrient(){
   const land = window.innerWidth > window.innerHeight * 1.05;
-  COLS = land ? 10 : 7; ROWS = land ? 8 : 12;   // dọc: 7 cột cho ô to hơn trên điện thoại
+  COLS = land ? 10 : 6; ROWS = land ? 8 : 12;   // dọc: 6 cột cho ô to tối đa trên điện thoại
 }
 const SHIFTS = ['none','down','up','left','right','none'];   // kiểu dồn ô theo màn
 const $ = s => document.querySelector(s);
@@ -708,9 +708,9 @@ function drawSoundIcon(){
 /* ---------- Kích thước ---------- */
 function layout(){
   const availW = window.innerWidth - 6;
-  const availH = window.innerHeight - 56 - 54 - 40;   // hud + controls + đệm dưới
-  cs = Math.max(26, Math.min(96, Math.floor(Math.min(availW/(COLS+0.9), availH/(ROWS+0.9)))));
-  PAD = Math.round(cs*0.45);
+  const availH = window.innerHeight - 46 - 38 - 30;   // hud + controls gọn + chỗ cho chữ đáy
+  cs = Math.max(26, Math.min(96, Math.floor(Math.min(availW/(COLS+0.8), availH/(ROWS+0.8)))));
+  PAD = Math.round(cs*0.4);
   const W = COLS*cs + 2*PAD, H = ROWS*cs + 2*PAD;
   wrapEl.style.width = W+'px'; wrapEl.style.height = H+'px';
   boardEl.style.left = PAD+'px'; boardEl.style.top = PAD+'px';
@@ -718,6 +718,10 @@ function layout(){
   const dpr = window.devicePixelRatio||1;
   fx.width = W*dpr; fx.height = H*dpr; fx.style.width = W+'px'; fx.style.height = H+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0);
+  // màn hình chật thì ẩn chữ đáy để không chèn lên nút
+  const leftover = window.innerHeight - (46 + 38 + H);
+  const sl = document.getElementById('slogan');
+  if(sl) sl.style.opacity = leftover < 22 ? 0 : 1;
   tiles.forEach(t => t.alive && place(t, false));
 }
 // tâm ô (r,c) của lưới đệm → toạ độ px trong board-wrap
