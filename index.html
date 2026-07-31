@@ -639,7 +639,7 @@ const spriteSVG = t => `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="58.5" rx="
 let COLS = 8, ROWS = 10;                      // lưới thật (không tính viền rỗng), tự xoay theo màn hình
 function chooseOrient(){
   const land = window.innerWidth > window.innerHeight * 1.05;
-  COLS = land ? 10 : 8; ROWS = land ? 8 : 10;
+  COLS = land ? 10 : 7; ROWS = land ? 8 : 12;   // dọc: 7 cột cho ô to hơn trên điện thoại
 }
 const SHIFTS = ['none','down','up','left','right','none'];   // kiểu dồn ô theo màn
 const $ = s => document.querySelector(s);
@@ -707,10 +707,10 @@ function drawSoundIcon(){
 
 /* ---------- Kích thước ---------- */
 function layout(){
-  const availW = window.innerWidth - 10;
+  const availW = window.innerWidth - 6;
   const availH = window.innerHeight - 56 - 54 - 40;   // hud + controls + đệm dưới
-  cs = Math.max(26, Math.min(96, Math.floor(Math.min(availW/(COLS+1.15), availH/(ROWS+1.15)))));
-  PAD = Math.round(cs*0.55);
+  cs = Math.max(26, Math.min(96, Math.floor(Math.min(availW/(COLS+0.9), availH/(ROWS+0.9)))));
+  PAD = Math.round(cs*0.45);
   const W = COLS*cs + 2*PAD, H = ROWS*cs + 2*PAD;
   wrapEl.style.width = W+'px'; wrapEl.style.height = H+'px';
   boardEl.style.left = PAD+'px'; boardEl.style.top = PAD+'px';
@@ -728,8 +728,8 @@ function center(r,c){
 }
 function place(t, anim=true){
   if(!anim) t.el.style.transition = 'none';
-  t.el.style.width = (cs-3)+'px'; t.el.style.height = (cs-3)+'px';
-  t.el.style.left = ((t.c-1)*cs+1.5)+'px'; t.el.style.top = ((t.r-1)*cs+1.5)+'px';
+  t.el.style.width = (cs-2)+'px'; t.el.style.height = (cs-2)+'px';
+  t.el.style.left = ((t.c-1)*cs+1)+'px'; t.el.style.top = ((t.r-1)*cs+1)+'px';
   const m = t.el.querySelector('.mod');
   if(m) m.style.fontSize = Math.max(11, Math.round(cs*.3)) + 'px';
   if(!anim){ t.el.offsetHeight; t.el.style.transition = ''; }
