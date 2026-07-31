@@ -30,24 +30,24 @@ body {
 #app { position:relative; z-index:3; width:100%; height:100dvh; display:flex; flex-direction:column; align-items:center; }
 
 /* ---------- HUD ---------- */
-#hud { width:min(100%,720px); display:flex; align-items:center; gap:8px; padding:7px 10px 4px; }
+#hud { width:min(100%,720px); display:flex; align-items:center; gap:6px; padding:6px 10px 3px; }
 .pill {
-  color:#fff; font-weight:800; font-size:16px; white-space:nowrap;
+  color:#fff; font-weight:800; font-size:13px; white-space:nowrap;
   background:linear-gradient(180deg,#a052d8,#7a35b8);
   border:2px solid rgba(235,190,255,.7); border-radius:999px;
-  padding:4px 12px; box-shadow:0 2px 6px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.35);
+  padding:3px 10px; box-shadow:0 2px 6px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.35);
 }
 #timerbar {
-  position:relative; flex:1; height:26px; border-radius:999px; overflow:hidden;
+  position:relative; flex:1; height:17px; border-radius:999px; overflow:hidden;
   border:2px solid rgba(240,170,230,.85); background:#241040;
   box-shadow:0 0 10px rgba(230,120,210,.4), inset 0 2px 4px rgba(0,0,0,.5);
 }
 #timerfill { position:absolute; inset:0; background:linear-gradient(90deg,#ff4136,#ff8c1a,#ffe83d,#7ae04d,#2fe0c8); }
 #timercover { position:absolute; top:0; right:0; bottom:0; width:0%; background:#241040; transition:width .25s linear; }
-.icon-btn { width:38px; height:38px; padding:0; display:flex; align-items:center; justify-content:center; cursor:pointer;
+.icon-btn { width:29px; height:29px; padding:0; display:flex; align-items:center; justify-content:center; cursor:pointer;
   background:linear-gradient(180deg,#a052d8,#7a35b8); border:2px solid rgba(235,190,255,.7); border-radius:50%;
   box-shadow:0 2px 6px rgba(0,0,0,.35); }
-.icon-btn svg { width:20px; height:20px; }
+.icon-btn svg { width:16px; height:16px; }
 .icon-btn:active { transform:scale(.92); }
 
 /* ---------- Board ---------- */
@@ -708,7 +708,7 @@ function drawSoundIcon(){
 /* ---------- Kích thước ---------- */
 function layout(){
   const availW = window.innerWidth - 6;
-  const availH = window.innerHeight - 46 - 38 - 30;   // hud + controls gọn + chỗ cho chữ đáy
+  const availH = window.innerHeight - 38 - 38 - 30;   // hud + controls gọn + chỗ cho chữ đáy
   cs = Math.max(26, Math.min(96, Math.floor(Math.min(availW/(COLS+0.8), availH/(ROWS+0.8)))));
   PAD = Math.round(cs*0.4);
   const W = COLS*cs + 2*PAD, H = ROWS*cs + 2*PAD;
@@ -719,7 +719,7 @@ function layout(){
   fx.width = W*dpr; fx.height = H*dpr; fx.style.width = W+'px'; fx.style.height = H+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0);
   // màn hình chật thì ẩn chữ đáy để không chèn lên nút
-  const leftover = window.innerHeight - (46 + 38 + H);
+  const leftover = window.innerHeight - (38 + 38 + H);
   const sl = document.getElementById('slogan');
   if(sl) sl.style.opacity = leftover < 22 ? 0 : 1;
   tiles.forEach(t => t.alive && place(t, false));
