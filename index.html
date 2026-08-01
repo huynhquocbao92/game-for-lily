@@ -637,9 +637,10 @@ const spriteSVG = t => `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="58.5" rx="
 
 /* ================= GAME ================= */
 let COLS = 8, ROWS = 10;                      // lưới thật (không tính viền rỗng), tự xoay theo màn hình
+const isLandscape = () => window.innerWidth > window.innerHeight * 1.05;
 function chooseOrient(){
-  const land = window.innerWidth > window.innerHeight * 1.05;
-  COLS = land ? 10 : 6; ROWS = land ? 8 : 12;   // dọc: 6 cột cho ô to tối đa trên điện thoại
+  const land = isLandscape();
+  COLS = land ? 9 : 6; ROWS = land ? 8 : 12;   // 2 hướng đều 72 ô để xoay giữa màn không mất trạng thái
 }
 const SHIFTS = ['none','down','up','left','right','none'];   // kiểu dồn ô theo màn
 const $ = s => document.querySelector(s);
@@ -1167,7 +1168,27 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
   addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
 drawSoundIcon(); drawFullIcon();
-window.addEventListener('resize', layout);
+function onResize(){
+  const land = isLandscape();
+  const curLand = COLS > ROWS;
+  if(tiles.length && land !== curLand){
+    // xoay màn hình giữa ván: sắp lại toàn bộ ô sang lưới hướng mới, giữ nguyên trạng thái
+    const cells = [];
+    for(let r=1; r<=ROWS; r++) for(let c=1; c<=COLS; c++) cells.push(grid[r][c]);
+    chooseOrient();
+    grid = Array.from({length:ROWS+2}, ()=>Array(COLS+2).fill(null));
+    cells.forEach((t,i)=>{
+      const r = Math.floor(i/COLS)+1, c = i%COLS+1;
+      if(t){ t.r = r; t.c = c; grid[r][c] = t; }
+    });
+    layout();
+    if(playing && !locked && !findPair() && tiles.some(t=>t.alive)){
+      reshuffle(true); ensureSolvable(true); toast('Xoay màn hình — xáo lại thế cờ!');
+    }
+  } else layout();
+}
+window.addEventListener('resize', onResize);
+window.addEventListener('orientationchange', ()=> setTimeout(onResize, 120));
 chooseOrient(); layout();
 startScreen();
 
